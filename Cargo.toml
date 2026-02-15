@@ -10,3 +10,5 @@ tower-http = { version = "0.6.8", features = ["cors"] }
 zpl-forge = "0.1.1"
 open = "5.3.3"
 clap = { version = "4.5.58", features = ["derive"] }
+log = "0.4.29"
+colog = "1.4.0"

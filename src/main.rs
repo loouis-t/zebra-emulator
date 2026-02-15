@@ -3,6 +3,7 @@ use axum::{
 };
 
 use clap::Parser;
+use log::{error, info};
 use open;
 use std::{collections::HashMap, error::Error, fs::File, io::Write, time::Duration};
 use tower_http::cors::{Any, CorsLayer};
@@ -47,24 +48,35 @@ async fn post_print(State(args): State<Args>, body: Bytes) -> impl IntoResponse 
         Resolution::Dpi203,
     ) {
         Ok(e) => e,
-        Err(_) => return StatusCode::BAD_REQUEST,
+        Err(_) => {
+            error!("Invalid ZPL input");
+            return StatusCode::BAD_REQUEST;
+        }
     };
 
     let png_bytes = match engine.render(PngBackend::new(), &HashMap::new()) {
         Ok(bytes) => bytes,
-        Err(_) => return StatusCode::INTERNAL_SERVER_ERROR,
+        Err(_) => {
+            error!("Failed to render png from ZPL");
+            return StatusCode::INTERNAL_SERVER_ERROR;
+        }
     };
 
     match display_png(png_bytes.as_slice()) {
         Ok(_) => (),
-        Err(_) => return StatusCode::INTERNAL_SERVER_ERROR,
+        Err(_) => {
+            error!("Could not open PNG in default viewer");
+            return StatusCode::INTERNAL_SERVER_ERROR;
+        }
     }
 
+    info!("Successfully rendered and displayed label");
     StatusCode::OK
 }
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn Error>> {
+    colog::init();
     let args = Args::parse();
 
     let cors = CorsLayer::new()
