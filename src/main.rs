@@ -5,9 +5,9 @@ use axum::{
 use clap::Parser;
 use log::{error, info};
 use open;
-use std::{collections::HashMap, error::Error, fs::File, io::Write, time::Duration};
+use std::{error::Error, fs::File, io::Write, time::Duration};
 use tower_http::cors::{Any, CorsLayer};
-use zpl_forge::{Resolution, Unit, ZplEngine, forge::png::PngBackend};
+use zpl_rs::{Dpi, RenderOptions, render_with_options};
 
 /// Simple program to serve a POST endpoint that accepts ZPL
 /// and renders it to PNG, then opens the PNG in the default viewer.
@@ -41,24 +41,16 @@ fn display_png(png_data: &[u8]) -> std::io::Result<()> {
 }
 
 async fn post_print(State(args): State<Args>, body: Bytes) -> impl IntoResponse {
-    let engine = match ZplEngine::new(
-        &String::from_utf8_lossy(&body),
-        Unit::Inches(args.width),
-        Unit::Inches(args.height),
-        Resolution::Dpi203,
-    ) {
-        Ok(e) => e,
-        Err(_) => {
-            error!("Invalid ZPL input");
-            return StatusCode::BAD_REQUEST;
-        }
-    };
+    let zpl = String::from_utf8_lossy(&body);
+    let options = RenderOptions::new()
+        .dpi(Dpi::Dpi203)
+        .size((args.width * 203.0) as i32, (args.height * 203.0) as i32);
 
-    let png_bytes = match engine.render(PngBackend::new(), &HashMap::new()) {
+    let png_bytes = match render_with_options(&zpl, &options) {
         Ok(bytes) => bytes,
-        Err(_) => {
-            error!("Failed to render png from ZPL");
-            return StatusCode::INTERNAL_SERVER_ERROR;
+        Err(e) => {
+            error!("Failed to render ZPL: {}", e);
+            return StatusCode::BAD_REQUEST;
         }
     };
 
@@ -90,8 +82,12 @@ async fn main() -> Result<(), Box<dyn Error>> {
         .with_state(args.clone())
         .layer(cors);
 
+    let listening_addr = format!("{}:{}", args.interface, args.port);
+    info!("Zebra Emulator is listening on {}", listening_addr);
+    info!("ZPL format is set to {}x{}", args.width, args.height);
+
     let listener =
-        tokio::net::TcpListener::bind(format!("{}:{}", args.interface, args.port)).await?;
+        tokio::net::TcpListener::bind(listening_addr).await?;
     axum::serve(listener, app).await?;
     Ok(())
 }

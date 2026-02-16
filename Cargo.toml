@@ -2,13 +2,15 @@
 name = "zebra-emulator"
 version = "0.1.0"
 edition = "2024"
+authors = ["Louis Travaux"]
+description = "Simple Zebra ZPL emulator that simulates sending labels to a network printer. "
 
 [dependencies]
 axum = "0.8.8"
 tokio = { version = "1.49.0", features = ["rt-multi-thread", "net", "macros"] }
 tower-http = { version = "0.6.8", features = ["cors"] }
-zpl-forge = "0.1.1"
 open = "5.3.3"
 clap = { version = "4.5.58", features = ["derive"] }
 log = "0.4.29"
 colog = "1.4.0"
+zpl-rs = "0.1.4"
