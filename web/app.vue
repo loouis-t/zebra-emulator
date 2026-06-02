@@ -1,0 +1,8 @@
+<template>
+  <NuxtPage />
+</template>
+
+<style>
+*, *::before, *::after { box-sizing: border-box; }
+body { margin: 0; background: #0d0d0d; color: #e0e0e0; font-family: system-ui, -apple-system, sans-serif; }
+</style>

@@ -8,9 +8,12 @@ description = "Simple Zebra ZPL emulator that simulates sending labels to a netw
 [dependencies]
 axum = "0.8.8"
 tokio = { version = "1.49.0", features = ["rt-multi-thread", "net", "macros"] }
-tower-http = { version = "0.6.8", features = ["cors"] }
-open = "5.3.3"
+tokio-stream = { version = "0.1.18", features = ["sync"] }
+tower-http = { version = "0.6.8", features = ["cors", "fs"] }
 clap = { version = "4.5.58", features = ["derive"] }
 log = "0.4.29"
 colog = "1.4.0"
 zpl-rs = "0.1.4"
+serde = { version = "1", features = ["derive"] }
+base64 = "0.22.1"
+futures = "0.3.32"
