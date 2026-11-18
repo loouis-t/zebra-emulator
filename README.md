@@ -1,35 +1,32 @@
 # Zebra Emulator
 
 This is a simple emulator for Zebra label printers.
-Each virtual printer receives ZPL over HTTP, renders it to PNG and streams the result
-live to the web app.
+The server only relays the ZPL each virtual printer receives; labels are rendered in the
+browser by [zpl-renderer-js](https://github.com/Fabrizz/zpl-renderer-js) (WebAssembly).
 
 ## Usage
 
 ```bash
-./zebra-emulator --web-dir web/.output/public
+bun install
+bun run build
+bun run start
 ```
 
-Then open http://localhost:8080, pick a printer name and point your software at the
-printer address shown on the page. Run `./zebra-emulator --help` for all options
-(default label size, port, interface, web directory).
+Then open http://localhost:3000, pick a printer name and point your software at the
+printer address shown on the page. The label size is set per printer in the page.
+Use `bun run dev` while developing and `bun run test` to build and run the tests.
 
-With Docker:
-
-```bash
-docker build -t zebra-emulator . && docker run -p 8080:8080 zebra-emulator
-```
+To deploy on Coolify, use the Railpack build pack with port 3000.
 
 ## API
 
-| Route                    | Description                                  |
-|--------------------------|----------------------------------------------|
-| `POST /{printer}/pstprnt` | Render the ZPL body and push it to viewers  |
-| `GET /{printer}/stream`   | Server-sent events, one base64 PNG per label |
-| `GET/POST /{printer}/config` | Label size in inches: `{"width":2.25,"height":1.25}` |
+| Route                     | Description                                          |
+|---------------------------|------------------------------------------------------|
+| `POST /{printer}/pstprnt` | Relay the ZPL body to that printer's viewers         |
+| `GET /{printer}/stream`   | Server-sent events, one base64 ZPL payload per print |
 
 ## Test
 
 ```bash
-curl -d '^XA^FO50,50^ADN,36,20^FDHello World!^FS^XZ' http://localhost:8080/my-printer/pstprnt
+curl -d '^XA^FO50,50^ADN,36,20^FDHello World!^FS^XZ' http://localhost:3000/my-printer/pstprnt
 ```

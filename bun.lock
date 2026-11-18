@@ -4,6 +4,9 @@
   "workspaces": {
     "": {
       "name": "zebra-emulator-web",
+      "dependencies": {
+        "zpl-renderer-js": "5.0.0",
+      },
       "devDependencies": {
         "nuxt": "^4.4.6",
       },
@@ -1281,6 +1284,8 @@
     "youch-core": ["youch-core@0.3.3", "", { "dependencies": { "@poppinss/exception": "^1.2.2", "error-stack-parser-es": "^1.0.5" } }, "sha512-ho7XuGjLaJ2hWHoK8yFnsUGy2Y5uDpqSTq1FkHLK4/oqKtyUU1AFbOOxY4IpC9f0fTLjwYbslUz0Po5BpD1wrA=="],
 
     "zip-stream": ["zip-stream@6.0.1", "", { "dependencies": { "archiver-utils": "^5.0.0", "compress-commons": "^6.0.2", "readable-stream": "^4.0.0" } }, "sha512-zK7YHHz4ZXpW89AHXUPbQVGKI7uvkd3hzusTdotCg1UxyaVtg0zFJSTfW/Dq5f7OBBVnq6cZIaC8Ti4hb6dtCA=="],
+
+    "zpl-renderer-js": ["zpl-renderer-js@5.0.0", "", {}, "sha512-6Nq2vOi/BUF6nDp8Eupr1L1uc+xlyPGhkWbieIuyhpceLzcm2IINE0Z1I+pIRU9Pw2TxyM5XEL38rx7T7bZWuw=="],
 
     "@babel/code-frame/js-tokens": ["js-tokens@4.0.0", "", {}, "sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ=="],
 
