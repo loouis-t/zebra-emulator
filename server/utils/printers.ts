@@ -1,8 +1,8 @@
-type Subscriber = (zpl: string) => void
+type Subscriber = (zpl: Buffer) => void
 
 const printers = new Map<string, Set<Subscriber>>()
 
-export function publish(printer: string, zpl: string) {
+export function publish(printer: string, zpl: Buffer) {
   printers.get(printer)?.forEach(send => send(zpl))
 }
 

@@ -25,7 +25,7 @@ To deploy on Coolify, use the Railpack build pack with port 3000.
 | `POST /{printer}/pstprnt` | Relay the ZPL body to that printer's viewers         |
 | `GET /{printer}/stream`   | Server-sent events, one base64 ZPL payload per print |
 
-## Test
+## Example
 
 ```bash
 curl -d '^XA^FO50,50^ADN,36,20^FDHello World!^FS^XZ' http://localhost:3000/my-printer/pstprnt

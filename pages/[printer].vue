@@ -35,34 +35,30 @@
 
 <script setup lang="ts">
 const printer = useRoute().params.printer as string
-const base = `${window.location.origin}/${printer}`
-const endpoint = base.replace(/^https?:\/\//, '')
+const endpoint = `${location.host}/${printer}`
 const sizeKey = `label-size:${printer}`
 
-const labels = ref<{ id: number; src: string }[]>([])
+const labels = shallowRef<{ id: number; src: string }[]>([])
 const status = ref('Connecting…')
 const copied = ref(false)
-const size = ref(JSON.parse(localStorage.getItem(sizeKey) ?? '{"width":2.25,"height":1.25}'))
+const size = ref(JSON.parse(localStorage.getItem(sizeKey)!) ?? { width: 2.25, height: 1.25 })
+const es = new EventSource(`/${printer}/stream`)
 let nextId = 0
-let es: EventSource | undefined
 
 watch(size, value => localStorage.setItem(sizeKey, JSON.stringify(value)), { deep: true })
 
-onMounted(() => {
-  es = new EventSource(`${base}/stream`)
-  es.onopen = () => (status.value = '● Live')
-  es.onerror = () => (status.value = 'Disconnected — retrying…')
-  es.onmessage = async (e) => {
-    try {
-      const images = await renderZpl(e.data, size.value)
-      labels.value = [...images.reverse().map(src => ({ id: nextId++, src })), ...labels.value].slice(0, 20)
-      status.value = `Updated ${new Date().toLocaleTimeString()}`
-    } catch (err) {
-      status.value = `Invalid ZPL: ${(err as Error).message}`
-    }
+es.onopen = () => (status.value = '● Live')
+es.onerror = () => (status.value = 'Disconnected — retrying…')
+es.onmessage = async (e) => {
+  try {
+    const images = await renderZpl(e.data, size.value)
+    labels.value = [...images.reverse().map(src => ({ id: nextId++, src })), ...labels.value].slice(0, 20)
+    status.value = `Updated ${new Date().toLocaleTimeString()}`
+  } catch (err) {
+    status.value = `Invalid ZPL: ${(err as Error).message}`
   }
-})
-onUnmounted(() => es?.close())
+}
+onUnmounted(() => es.close())
 
 function copy() {
   navigator.clipboard.writeText(endpoint)

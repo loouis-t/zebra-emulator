@@ -9,7 +9,6 @@ beforeAll(async () => {
   server = Bun.spawn([process.execPath, '.output/server/index.mjs'], {
     env: { ...process.env, PORT: String(port) },
     stdout: 'inherit',
-    stderr: 'inherit',
   })
   for (let i = 0; i < 100; i++) {
     if (await fetch(url).then(() => true, () => false)) return

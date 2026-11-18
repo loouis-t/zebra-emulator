@@ -3,29 +3,17 @@
     <div class="surface card">
       <h1>Zebra Emulator</h1>
       <p>Enter a virtual printer name to get a live preview URL.</p>
-      <div class="row">
-        <input
-          v-model="name"
-          placeholder="my-printer"
-          spellcheck="false"
-          autofocus
-          @keydown.enter="go"
-        />
-        <button :disabled="!name.trim()" @click="go">Open →</button>
-      </div>
+      <form class="row" @submit.prevent="go">
+        <input v-model="name" placeholder="my-printer" spellcheck="false" autofocus />
+        <button type="submit" :disabled="!name.trim()">Open →</button>
+      </form>
     </div>
   </main>
 </template>
 
 <script setup lang="ts">
 const name = ref('')
-const router = useRouter()
-const go = () => {
-  const slug = name.value.trim()
-  if (!slug) return
-  const id = crypto.randomUUID().split('-')[0] // 8 hex chars, enough entropy
-  router.push(`/${encodeURIComponent(slug)}-${id}`)
-}
+const go = () => navigateTo(`/${encodeURIComponent(name.value.trim())}-${crypto.randomUUID().split('-')[0]}`)
 </script>
 
 <style scoped>
