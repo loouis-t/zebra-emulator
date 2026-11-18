@@ -1,6 +1,6 @@
 <template>
   <main>
-    <div class="card">
+    <div class="surface card">
       <h1>Zebra Emulator</h1>
       <p>Enter a virtual printer name to get a live preview URL.</p>
       <div class="row">
@@ -36,8 +36,6 @@ main {
   min-height: 100vh;
 }
 .card {
-  background: #141414;
-  border: 1px solid #222;
   border-radius: 14px;
   padding: 40px;
   width: 100%;
@@ -46,19 +44,7 @@ main {
 h1 { margin: 0 0 8px; font-size: 1.3em; font-weight: 600; }
 p { margin: 0 0 24px; font-size: 0.875em; color: #555; line-height: 1.5; }
 .row { display: flex; gap: 8px; }
-input {
-  flex: 1;
-  background: #0d0d0d;
-  border: 1px solid #2a2a2a;
-  border-radius: 7px;
-  padding: 10px 13px;
-  color: #e0e0e0;
-  font-family: monospace;
-  font-size: 0.9em;
-  outline: none;
-  transition: border-color 0.15s;
-}
-input:focus { border-color: #444; }
+input { flex: 1; padding: 10px 13px; font-family: monospace; font-size: 0.9em; }
 button {
   background: #e0e0e0;
   color: #000;

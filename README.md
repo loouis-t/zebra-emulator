@@ -1,35 +1,35 @@
 # Zebra Emulator
 
 This is a simple emulator for Zebra label printers.
-It listens for incoming connections on a specified port and renders the received ZPL commands as images.
-
-The temporary image files are stored in `/tmp`, and are opened automatically using the default image
-viewer on your system.
+Each virtual printer receives ZPL over HTTP, renders it to PNG and streams the result
+live to the web app.
 
 ## Usage
 
-To run the emulator to render 2,25x1,25 inch labels, use the following command:
-
 ```bash
-./zebra-emulator
+./zebra-emulator --web-dir web/.output/public
 ```
 
-### CLI Options
+Then open http://localhost:8080, pick a printer name and point your software at the
+printer address shown on the page. Run `./zebra-emulator --help` for all options
+(default label size, port, interface, web directory).
 
-| Option              | Description           | Default   |
-|---------------------|-----------------------|-----------|
-| `-x`, `--width`     | Label width (inches)  | 2.25      |
-| `-y`, `--height`    | Label height (inches) | 1.25      |
-| `-p`, `--port`      | Port to listen on     | 8080      |
-| `-i`, `--interface` | Interface to bind to  | 127.0.0.1 |
+With Docker:
+
+```bash
+docker build -t zebra-emulator . && docker run -p 8080:8080 zebra-emulator
+```
+
+## API
+
+| Route                    | Description                                  |
+|--------------------------|----------------------------------------------|
+| `POST /{printer}/pstprnt` | Render the ZPL body and push it to viewers  |
+| `GET /{printer}/stream`   | Server-sent events, one base64 PNG per label |
+| `GET/POST /{printer}/config` | Label size in inches: `{"width":2.25,"height":1.25}` |
 
 ## Test
 
-You can test the emulator by sending a simple HTTP POST request with ZPL commands.
-
 ```bash
-curl -v -H 'Content-Length: 42' \
-     -H 'Content-Type: text/plain;charset=UTF-8' \
-     -d '^XA^FO50,50^ADN,36,20^FDHello World!^FS^XZ' \
-     http://localhost:8080/pstprnt
+curl -d '^XA^FO50,50^ADN,36,20^FDHello World!^FS^XZ' http://localhost:8080/my-printer/pstprnt
 ```

@@ -13,7 +13,10 @@ tower-http = { version = "0.6.8", features = ["cors", "fs"] }
 clap = { version = "4.5.58", features = ["derive"] }
 log = "0.4.29"
 colog = "1.4.0"
-zpl-rs = "0.1.4"
+zpl-rs = "0.1.10"
 serde = { version = "1", features = ["derive"] }
 base64 = "0.22.1"
-futures = "0.3.32"
+
+[dev-dependencies]
+tower = { version = "0.5.3", features = ["util"] }
+http-body-util = "0.1.3"
