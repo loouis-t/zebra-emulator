@@ -9,7 +9,7 @@
     "test": "bunx --bun nuxt build && bun test"
   },
   "devDependencies": {
-    "nuxt": "^4.4.6"
+    "nuxt": "^4.6.4"
   },
   "dependencies": {
     "zpl-renderer-js": "5.0.0"
