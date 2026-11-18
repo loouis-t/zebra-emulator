@@ -1,0 +1,17 @@
+{
+  "name": "zebra-emulator",
+  "private": true,
+  "packageManager": "bun@1.4.4",
+  "scripts": {
+    "dev": "bunx --bun nuxt dev",
+    "build": "bunx --bun nuxt build",
+    "start": "bun .output/server/index.mjs",
+    "test": "bunx --bun nuxt build && bun test"
+  },
+  "devDependencies": {
+    "nuxt": "^4.6.4"
+  },
+  "dependencies": {
+    "zpl-renderer-js": "5.0.0"
+  }
+}
